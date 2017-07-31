@@ -1,0 +1,78 @@
+{% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
+{% load blog_tags %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<article>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-preview">
+                    <h1 class="post-title">{{ post.title }} | <small class="badge">{{ comments.count }} comment{{ comments.count|pluralize }}</small></h1>
+		            <p class="post-meta">Posted by {{ post.author }} on {{ post.publish }}</p>
+		            {{ post.body|markdown }}
+                    {# I will this section, link to share to facebook, twitter or by email #}
+		            <p><a href="{% url "blog:post_share" post.id %}">Share this post</a></p>
+                </div>
+			</div>
+		</div>
+	</div>
+</article>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <div class="panel panel-danger text-center">
+            <h2>These similar posts may interest you</h2>   
+                {% for post in similar_posts %}
+                      <p><a class="text-danger" href="{{ post.get_absolute_url }}">{{ post.title }}</a></p>
+                   {% empty %}
+                       <p>There are no similar posts yet.</p>    
+	             {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Block Comments -->
+<!-- Comments Form -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="well">
+		        <h2>Leave a comment</h2>
+		        <form action="." method="post" role="form">
+                    <div class="form-group">
+			    	    {{ comment_form|crispy }}
+				        {% csrf_token %}
+			            <button type="submit" class="btn btn-primary">Add a comment</button>
+                    </div>
+		        </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <h2 claiss="page-header">Comments | <small class="badge">{{ comments.count }} comment{{ comments.count|pluralize }}</small></h2>
+                {% for comment in comments %}
+                <div class="post-preview">
+                    <p class="post-meta">Comment {{ forloop.count }} by <mark>{{ comment.name }}</mark> on {{ comment.created }}</p>
+                </div>
+                {{ comment.body|linebreaks }}
+                    <hr/>
+                {% empty %}
+                    <h2 class="text-danger">There are no comments yet.</h2>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+

@@ -1,0 +1,26 @@
+{# templates/blog/post/share.html #}
+
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Share a post{% endblock %}
+ {% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="well">
+            {% if sent %}
+            <h2 class="page-header">E-mail successfully sent</h2>
+            <p class="text-success">"<mark>{{ post.title }}</mark>" was successfully sent to <mark>{{ cd.to }}</mark>.</p>
+            {% else %}
+                <h2 class="page-header">Share "{{ post.title }}" by e-mail</h2>
+                     <form action="." method="post">
+                        {{ form|crispy }}
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Send e-mail</button>
+                    </form>
+        </div>
+    </div>
+</div>
+  {% endif %}
+{% endblock %}
