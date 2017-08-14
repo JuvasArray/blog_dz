@@ -1,1 +1,1 @@
-web: gunicorn educ.wsgi
+web: gunicorn blog_dz.wsgi --log-file -
